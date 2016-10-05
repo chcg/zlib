@@ -6,6 +6,7 @@ environment:
   matrix:
   - PlatformToolset: v140_xp
   - PlatformToolset: v120_xp
+  - PlatformToolset: mingw-w64
 
 platform:
     - x64
@@ -20,6 +21,13 @@ install:
     - if "%platform%"=="Win32" set archi=x86
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %archi%
 
+    - ps: |
+      if ($env:PLATFORMTOOLSET -Match "mingw-w64") {
+          $env:Path += ";C:\mingw-w64\i686-5.3.0-posix-dwarf-rt_v4-rev0\mingw32\bin"
+        }
+        g++ --version
+      }
+
 build:
     parallel: true                  # enable MSBuild parallel builds
     verbosity: minimal
@@ -32,6 +40,7 @@ before_build:
     {
         "v140_xp" {"Visual Studio 14 2015"}
         "v120_xp" {"Visual Studio 12 2013"}
+        "mingw-w64" { "MinGW Makefiles"}
     }
     if ($env:PLATFORM -eq "x64")
     {
