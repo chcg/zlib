@@ -51,7 +51,7 @@ before_build:
 
 build_script:
 - ps: |
-    $env:Path = $env:Path.Replace('C:\Program Files\Git\bin;','')
+    $env:Path = $env:Path.Replace('C:\Program Files\Git\usr\bin;','')
     Write-Output "Path: $env:Path"
     md _build -Force | Out-Null
     cd _build
