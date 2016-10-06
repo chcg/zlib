@@ -4,16 +4,16 @@ image: Visual Studio 2015
 
 environment:
   matrix:
-  #- PlatformToolset: v140_xp
-  #- PlatformToolset: v120_xp
+  - PlatformToolset: v140_xp
+  - PlatformToolset: v120_xp
   - PlatformToolset: mingw-w64
 
 platform:
-    #- x64
+    - x64
     - Win32
 
 configuration:
-    #- Release
+    - Release
     - Debug
 
 install:
@@ -24,7 +24,7 @@ install:
     - ps: |
         if ($env:PLATFORMTOOLSET -match "mingw-w64") {
           $env:Path += ";C:\mingw-w64\i686-5.3.0-posix-dwarf-rt_v4-rev0\mingw32\bin"
-          $env:Path = $env:Path.Replace('C:\Program Files\Git\bin;','')
+          $env:Path = $env:Path.Replace('C:\Program Files\Git\usr\bin;','')
           g++ --version
         }
 
@@ -42,8 +42,7 @@ before_build:
         "v120_xp" {"Visual Studio 12 2013"}
         "mingw-w64" { "MinGW Makefiles"}
     }
-    #currently no x86-64 variant of mingw-w64 is install at appveyor
-    #and the change would be needed above by adding the right compiler path to the path variable
+    #not applicable with MinGW Makefiles generator
     if ($env:PLATFORM -eq "x64" -and $env:PLATFORMTOOLSET -notmatch "mingw-w64")
     {
         $generator = "$generator Win64"
@@ -51,8 +50,6 @@ before_build:
 
 build_script:
 - ps: |
-    $env:Path = $env:Path.Replace('C:\Program Files\Git\usr\bin;','')
-    Write-Output "Path: $env:Path"
     md _build -Force | Out-Null
     cd _build
     & cmake -G "$generator" ..
