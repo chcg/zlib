@@ -5,15 +5,15 @@ image: Visual Studio 2015
 environment:
   matrix:
   - PlatformToolset: v140_xp
-  - PlatformToolset: v120_xp
-  - PlatformToolset: mingw-w64
+  #- PlatformToolset: v120_xp
+  #- PlatformToolset: mingw-w64
 
 platform:
     - x64
     - Win32
 
 configuration:
-    - Release
+    #- Release
     - Debug
 
 install:
@@ -36,6 +36,7 @@ before_build:
 - ps: |
     Write-Output "Configuration: $env:CONFIGURATION"
     Write-Output "Platform: $env:PLATFORM"
+    $asm_cmake_option=ASM686
     $generator = switch ($env:PLATFORMTOOLSET)
     {
         "v140_xp" {"Visual Studio 14 2015"}
@@ -46,6 +47,7 @@ before_build:
     if ($env:PLATFORM -eq "x64" -and $env:PLATFORMTOOLSET -notmatch "mingw-w64")
     {
         $generator = "$generator Win64"
+        $asm_cmake_option=AMD64
     }
 
 build_script:
@@ -53,6 +55,16 @@ build_script:
     md _build -Force | Out-Null
     cd _build
     & cmake -G "$generator" ..
+    if ($LastExitCode -ne 0) {
+        throw "Exec: $ErrorMessage"
+    }
+    & cmake --build . --config $env:CONFIGURATION
+    if ($LastExitCode -ne 0) {
+        throw "Exec: $ErrorMessage"
+    }
+    md _build_asm -Force | Out-Null
+    cd _build_asm
+    & cmake -G "$generator" -D$asm_cmake_option..
     if ($LastExitCode -ne 0) {
         throw "Exec: $ErrorMessage"
     }
