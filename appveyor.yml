@@ -9,7 +9,7 @@ environment:
   #- PlatformToolset: mingw-w64
 
 platform:
-    - x64
+    #- x64
     - Win32
 
 configuration:
@@ -36,7 +36,7 @@ before_build:
 - ps: |
     Write-Output "Configuration: $env:CONFIGURATION"
     Write-Output "Platform: $env:PLATFORM"
-    $asm_cmake_option="ASM686"
+    $asm_cmake_option="ASM686=ON"
     $generator = switch ($env:PLATFORMTOOLSET)
     {
         "v140_xp" {"Visual Studio 14 2015"}
@@ -47,7 +47,7 @@ before_build:
     if ($env:PLATFORM -eq "x64" -and $env:PLATFORMTOOLSET -notmatch "mingw-w64")
     {
         $generator = "$generator Win64"
-        $asm_cmake_option="AMD64"
+        $asm_cmake_option="AMD64=ON"
     }
 
 build_script:
