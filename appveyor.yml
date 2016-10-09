@@ -64,7 +64,7 @@ build_script:
     }
     md _build_asm -Force | Out-Null
     cd _build_asm
-    & cmake -G "$generator" -D$asm_cmake_option..
+    & cmake -G "$generator" -D"$asm_cmake_option" ..
     if ($LastExitCode -ne 0) {
         throw "Exec: $ErrorMessage"
     }
