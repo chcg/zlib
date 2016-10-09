@@ -6,7 +6,7 @@ environment:
   matrix:
   - PlatformToolset: v140_xp
   - PlatformToolset: v120_xp
-  #- PlatformToolset: mingw-w64
+  - PlatformToolset: mingw-w64
 
 platform:
     - x64
